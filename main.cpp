@@ -1,5 +1,6 @@
 #include "opencv2/opencv.hpp"
 
+
 std::vector<cv::Rect> detectLetters(cv::Mat img)
 {
     std::vector<cv::Rect> boundRect;
@@ -26,16 +27,25 @@ std::vector<cv::Rect> detectLetters(cv::Mat img)
 int main(int argc,char** argv)
 {
     int N = 17;
-    for (int i = 10; i < N; ++i)
+    for (int i = 11; i < 12; ++i)
     {
         //Read
-        cv::Mat img = cv::imread("test/test+example+6-" + std::to_string(i) + ".jpg");
+        cv::Mat img = cv::imread("test/0/test+example+6-" + std::to_string(i) + ".jpg");
         //Detect
         std::vector<cv::Rect> letterBBoxes = detectLetters(img);
 
+
+        for(int j=0; j< letterBBoxes.size(); j++)
+        {
+            cv::Point_<int> diff(letterBBoxes[j].height / 4, letterBBoxes[j].height / 4);
+            cv::Rect currentBox(letterBBoxes[j].tl() - diff, letterBBoxes[j].br() + diff);
+            cv::Mat crop = img(currentBox);
+            cv::imwrite("test/0/" + std::to_string(j) + ".jpg", crop);
+            std::system(("tesseract test/0/" + std::to_string(j) + ".jpg test/0/" + std::to_string(j)).c_str());
+        }
         //Display
-        for(int i=0; i< letterBBoxes.size(); i++)
-            cv::rectangle(img,letterBBoxes[i],cv::Scalar(0,255,0),3,8,0);
+        for(int j=0; j< letterBBoxes.size(); j++)
+            cv::rectangle(img,letterBBoxes[j],cv::Scalar(0,255,0),3,8,0);
         cv::imwrite( "test/res_" + std::to_string(i) + ".jpg", img);
     }
 
