@@ -1,2 +1,2 @@
 # text_reco
-Text Recognition Natali
+Text Recognition Tesseract
